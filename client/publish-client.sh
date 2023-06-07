@@ -15,11 +15,20 @@ get_name() {
 write_commands() {
     local NEW_VERSION=$(get_version)
 
+    echo "You should run these commands now in the same order:"
+    echo
+    echo "------------------------------------------------------------------------------------"
+    echo
+
     echo "git tag client-${NEW_VERSION}"
     echo "git add ."
     echo "git commit -m\"Client's version has been bumped to: ${NEW_VERSION}\""
     echo "git push"
     echo "git push origin client-${NEW_VERSION}"
+
+    echo
+    echo "------------------------------------------------------------------------------------"
+    echo
 }
 
 # Confirm that all changes have been committed and pushed
@@ -89,7 +98,7 @@ shopt -s nocasematch
 while true; do
     echo "Select an option:"
     echo "A) Bump the version by the NPM version"
-    echo "B) Bump the version manually (you have to change version manually in package.json)"
+    echo -e "B) Bump the version manually $(tput setaf 6)(BEFORE press B -> you have to change the version manually in package.json)$(tput sgr0)"
     echo "C) Exit"
 
     read -r option
