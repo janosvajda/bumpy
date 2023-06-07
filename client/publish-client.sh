@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Clear the screen
+clear
+
 # Function to get version from package.json
 get_version() {
     grep '"version"' package.json | cut -d '"' -f4
@@ -18,6 +21,35 @@ write_commands() {
     echo "git push"
     echo "git push origin client-${NEW_VERSION}"
 }
+
+# Confirm that all changes have been committed and pushed
+# Set text color to green
+tput setaf 2
+echo "Before you run this script everything must be committed and pushed to git."
+read -p "There should not be any changes in code. Is everything nice and clean? (y/n) " answer
+# Reset text color
+tput sgr0
+
+case ${answer:0:1} in
+    y|Y )
+        echo "Continuing with the script..."
+        # Check if there are uncommitted changes
+        if [[ -z $(git status --porcelain) ]]; then
+            # No changes
+            echo "Code base is clean, no uncommitted changes found."
+        else
+            # Changes
+            tput setaf 1
+            echo "Sorry, but your branch contains uncommitted code. Exiting..."
+            tput sgr0
+            exit 1
+        fi
+    ;;
+    * )
+        echo "Please ensure all changes are committed and pushed, then rerun the script."
+        exit 1
+    ;;
+esac
 
 # Checkout to the main branch and pull the latest changes
 echo "I check out the main branch..."
