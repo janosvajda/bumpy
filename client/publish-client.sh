@@ -9,6 +9,23 @@ get_name() {
     grep '"name"' package.json | cut -d '"' -f4
 }
 
+write_commands() {
+    local NEW_VERSION=$(get_version)
+
+    echo "git tag client-${NEW_VERSION}"
+    echo "git add ."
+    echo "git commit -m\"Client's version has been bumped to: ${NEW_VERSION}\""
+    echo "git push"
+    echo "git push origin client-${NEW_VERSION}"
+}
+
+# Checkout to the main branch and pull the latest changes
+echo "I check out the main branch..."
+git checkout main
+
+echo "I pulled down the latest version of the code..."
+git pull
+
 # Check if the script is running in a directory named "client"
 if [ "$(basename "$PWD")" != "client" ]; then
     # Set text color to red
@@ -74,19 +91,13 @@ while true; do
                     ;;
             esac
 
-            NEW_VERSION=$(get_version)
-
-            echo "git tag client-${NEW_VERSION}"
-            echo "git push"
-            echo "git push origin client-${NEW_VERSION}"
+            write_commands
+            exit
             ;;
 
         b|B)
-            NEW_VERSION=$(get_version)
-
-            echo "git tag client-${NEW_VERSION}"
-            echo "git push"
-            echo "git push origin client-${NEW_VERSION}"
+            write_commands
+            exit
             ;;
 
         c|C)
