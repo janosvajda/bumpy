@@ -33,11 +33,17 @@ tput sgr0
 case ${answer:0:1} in
     y|Y )
         echo "Continuing with the script..."
-    ;;
-    * )
-        echo "Please ensure all changes are committed and pushed, then rerun the script."
-        exit 1
-    ;;
+        # Check if there are uncommitted changes
+        if [[ -z $(git status --porcelain) ]]; then
+            # No changes
+            echo "Code base is clean, no uncommitted changes found."
+        else
+            # Changes
+            tput setaf 1
+            echo "Sorry, but your branch contains uncommitted code. Exiting..."
+            tput sgr0
+            exit 1
+        fi
 esac
 
 # Checkout to the main branch and pull the latest changes
