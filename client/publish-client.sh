@@ -44,11 +44,6 @@ case ${answer:0:1} in
             tput sgr0
             exit 1
         fi
-    ;;
-    * )
-        echo "Please ensure all changes are committed and pushed, then rerun the script."
-        exit 1
-    ;;
 esac
 
 # Checkout to the main branch and pull the latest changes
