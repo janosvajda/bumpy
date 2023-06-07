@@ -76,18 +76,17 @@ while true; do
 
             NEW_VERSION=$(get_version)
 
-            echo "git tag client-${NEW_VERSION}" > commands.txt
-            echo "git push" >> commands.txt
-            echo "git push origin client-${NEW_VERSION}" >> commands.txt
-            echo "git push origin ${NEW_VERSION}" >> commands.txt
+            echo "git tag client-${NEW_VERSION}"
+            echo "git push"
+            echo "git push origin client-${NEW_VERSION}"
             ;;
 
         b|B)
             NEW_VERSION=$(get_version)
 
-            echo "git tag client-${NEW_VERSION}" > commands.txt
-            echo "git push" >> commands.txt
-            echo "git push origin client-${NEW_VERSION}" >> commands.txt
+            echo "git tag client-${NEW_VERSION}"
+            echo "git push"
+            echo "git push origin client-${NEW_VERSION}"
             ;;
 
         c|C)
