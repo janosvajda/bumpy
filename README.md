@@ -2,6 +2,13 @@
 
 This script is an assistant tool for maintaining JavaScript and TypeScript packages (not services), specifically those managed with NPM and Git. It provides automated assistance with versioning and preparing the project for publication.
 
+## Usage
+
+To use this script, you should copy it to your project's root directory. Then, you can run it directly from your terminal with the command `./publish-client.sh`. The script will guide you through its process via a series of prompts and messages.
+
+**Important**: The script does not execute any command. It just generates commands you can run if you want to publish your script.
+
+
 ## Features
 
 - **Automated Version Bumping**: The script facilitates version incrementation according to semantic versioning. It provides two ways to bump the version:
@@ -16,6 +23,3 @@ This script is an assistant tool for maintaining JavaScript and TypeScript packa
 
 - **Project Directory Check**: The script verifies it's being run within the correct project directory. It looks for the presence of a `package.json` file and a specific directory name (`client`) before proceeding.
 
-## Usage
-
-To use this script, you should copy it to your project's root directory. Then, you can run it directly from your terminal with the command `./publish-client.sh`. The script will guide you through its process via a series of prompts and messages.
