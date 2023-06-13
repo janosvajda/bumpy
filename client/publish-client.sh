@@ -15,7 +15,7 @@ get_name() {
 write_commands() {
     local NEW_VERSION=$(get_version)
 
-    echo "You should run these commands now in the same order:"
+    echo "You can run these commands now in the same order:"
     echo
     echo "------------------------------------------------------------------------------------"
     echo
@@ -104,17 +104,17 @@ shopt -s nocasematch
 
 while true; do
     echo "Select an option:"
-    echo "A) Bump the version by the NPM version"
-    echo -e "B) Bump the version manually $(tput setaf 6)(BEFORE press B -> you have to change the version manually in package.json)$(tput sgr0)"
-    echo "C) Exit"
+    echo "A) Bump the version by the NPM version - NPM will automatically update the version number in your package.json file"
+    echo "B) Bump the version manually - You have to change the version manually in package.json before choosing this option"
+    echo "C) Exit - Close the script without any changes"
 
     read -r option
     case $option in
         a|A)
             echo "NPM version:"
-            echo "a) Major"
-            echo "b) Minor"
-            echo "c) Patch"
+            echo "a) Major - The version number will increase by 1 in the first digit (for example from 2.3.4 to 3.0.0)"
+            echo "b) Minor - The version number will increase by 1 in the second digit (for example from 2.3.4 to 2.4.0)"
+            echo "c) Patch - The version number will increase by 1 in the third digit (for example from 2.3.4 to 2.3.5)"
 
             read -r npm_option
 
