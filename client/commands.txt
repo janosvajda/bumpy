@@ -1,4 +1,0 @@
-git tag client-1.0.1
-git push
-git push origin client-1.0.1
-git push origin 1.0.1
