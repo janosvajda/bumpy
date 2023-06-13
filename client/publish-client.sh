@@ -56,6 +56,19 @@ git checkout main
 echo "I pulled down the latest version of the code..."
 git pull
 
+# Run the tests
+echo "Running tests..."
+npm test
+
+# Check the exit code of the last command (npm test)
+if [ $? -ne 0 ]; then
+    # Set text color to red
+    tput setaf 1
+    echo "Error: Tests are failing. Please fix the failing tests before bumping the version."
+    tput sgr0  # Reset text color
+    exit 1
+fi
+
 # Check if the script is running in a directory named "client"
 if [ "$(basename "$PWD")" != "client" ]; then
     # Set text color to red
