@@ -3,6 +3,25 @@
 # Clear the screen
 clear
 
+# Check if the script is running in a directory named "client"
+if [ "$(basename "$PWD")" != "client" ]; then
+    # Set text color to red
+    tput setaf 1
+    echo "Error: You should be in the client directory. Run: cd client"
+    tput sgr0  # Reset text color
+    exit 1
+fi
+
+# Check if package.json exists in the current directory
+if [ ! -f package.json ]; then
+    # Set text color to red
+    tput setaf 1
+    echo "Error: No package.json found"
+    tput sgr0  # Reset text color
+    exit 1
+fi
+
+
 # Function to get version from package.json
 get_version() {
     grep '"version"' package.json | cut -d '"' -f4
@@ -14,15 +33,21 @@ get_name() {
 
 write_commands() {
     local NEW_VERSION=$(get_version)
+    local CURRENT_BRANCH=$(git branch --show-current)
 
-    echo "You can run these commands now in the same order:"
+    # Change color to green
+    tput setaf 2
+    echo "You are on the branch now: ${CURRENT_BRANCH}, and this will be the client's new version: ${NEW_VERSION}. So, you will publish this branch by these commands."
+    tput sgr0  # Reset color
+
+    echo "You can run these commands now in the same order for publishing the client:"
     echo
     echo "------------------------------------------------------------------------------------"
     echo
 
-    echo "git tag client-${NEW_VERSION}"
     echo "git add ."
     echo "git commit -m\"Client's version has been bumped to: ${NEW_VERSION}\""
+    echo "git tag client-${NEW_VERSION}"
     echo "git push"
     echo "git push origin client-${NEW_VERSION}"
 
@@ -31,10 +56,14 @@ write_commands() {
     echo
 }
 
+
 # Check if there are uncommitted changes
 if [[ -z $(git status --porcelain) ]]; then
     # No changes
     echo "Code base is clean, no uncommitted changes found."
+    echo
+    echo "------------------------------------------------------------------------------------"
+    echo
 else
     # Changes
     tput setaf 1
@@ -49,24 +78,55 @@ else
     exit 1
 fi
 
-# Checkout to the main branch and pull the latest changes
-echo "I check out the main branch..."
-git checkout main
+# Ask user for the branch to checkout
+echo "Select the branch you want to checkout & publish:"
+echo "1) main"
+echo "2) master"
+echo "3) develop"
+echo -e "4) Stay on current branch (\033[0;32mCurrent branch: $(git branch --show-current)\033[0m)"
+echo "5) Exit"
 
-echo "I pulled down the latest version of the code..."
-git pull
+read -p "Enter your choice [1-5]: " branch_option
 
-# Run the tests
-echo "Running tests..."
-npm test
+case $branch_option in
+    1)
+        git checkout main && git pull --ff-only || { echo "The selected branch checkout process has failed. Exiting..."; exit 1; }
+        ;;
+    2)
+        git checkout master && git pull --ff-only || { echo "The selected branch checkout process has failed. Exiting..."; exit 1; }
+        ;;
+    3)
+        git checkout develop && git pull --ff-only || { echo "The selected branch checkout process has failed. Exiting..."; exit 1; }
+        ;;
+    4)
+        # Stay on current branch, do nothing
+        ;;
+    5)
+        # Exit
+        exit 1
+        ;;
+    *)
+        echo "Invalid selection"
+        exit 1
+        ;;
+esac
 
-# Check the exit code of the last command (npm test)
-if [ $? -ne 0 ]; then
-    # Set text color to red
-    tput setaf 1
-    echo "Error: Tests are failing. Please fix the failing tests before bumping the version."
-    tput sgr0  # Reset text color
-    exit 1
+if [ $branch_option -ne 5 ]; then
+    echo "I pulled down the latest version of the code..."
+    git pull
+
+    # Run the tests
+    echo "Running tests..."
+    npm test
+
+    # Check the exit code of the last command (npm test)
+    if [ $? -ne 0 ]; then
+        # Set text color to red
+        tput setaf 1
+        echo "Error: Tests are failing. Please fix the failing tests before bumping the version."
+        tput sgr0  # Reset text color
+        exit 1
+    fi
 fi
 
 # Check if the script is running in a directory named "client"
